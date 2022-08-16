@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { Card, Container } from "react-bootstrap";
+import CardHeader from "react-bootstrap/esm/CardHeader";
+import Attacher from "./Components/Attacher";
+import Deployer from "./Components/Deployer";
+import DeployerOrAttacher from "./Components/DeployerOrAttacher";
+import { useState } from "react";
+
 
 function App() {
+  const [whoAreYou, setwhoAreYou] = useState(null);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container fluid>
+      <Card>
+        <Card.Header>Morra Game</Card.Header>
+        <Card.Body>
+          {whoAreYou === null ? <DeployerOrAttacher iAmDeployer={() => setwhoAreYou('Deployer')} iAmAttacher={() => setwhoAreYou('Attacher')} />:""}
+          {whoAreYou === 'Deployer' ? <Deployer/> : "" }
+          {whoAreYou === 'Attacher' ? <Attacher/> : "" }
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 
