@@ -6,23 +6,30 @@ const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
   providerEnv: 'TestNet', MyAlgoConnect }));
 
-const common = {
-    getAccount : async () => {
+export default class Common {
+    reach = reach
+    backend = backend
+    getAccount = async () => {
         return reach.getDefaultAccount();
-    },
-    getBalance : async (account) => {
+    }
+    getBalance = async (account) => {
         const balAtomic = await reach.balanceOf(account);       
         return reach.formatCurrency(balAtomic, 4);
-    },
-    getContract : async (account) => {
-        return await account.contract(backend);
-    },
-    getContractInfo : async(contract) => {
-        return JSON.stringify( await contract.getInfo(), null, 2);
-    },
-    attachToContract : async(account, contractInfo) => {
+    }
+    getContract = async (account) => {
+        return await account.contract(this.backend);
+    }
+    getContractInfo = async() => {
+        const account = await this.getAccount();
+        const contract = await this.getContract(account);
+        
+        const contractInfo = JSON.stringify( await contract.getInfo(), null, 2);
+        
+        return {contractInfo, contract};
+    }
+    attachToContract = async(contractInfo) => {
+        const account = await this.getAccount();
         return await account.contract(backend, JSON.parse(contractInfo));
     }
 };
 
-export default common;
