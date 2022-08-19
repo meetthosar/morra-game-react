@@ -121,7 +121,7 @@ export default function Deployer() {
         return Object(playAgain);
     }
 
-    const isPlayed = () => { resolvePlayandGuess.playguess({hand:hand, guess:guess}); setPlayed(true);}
+    const isPlayed = () => { resolvePlayandGuess.playguess({hand:hand, guess:guess}); setPlayed(true); setPlayable(false);}
 
     const seeWinner = (outcome) => {
         console.log(JSON.parse(outcome));
@@ -146,22 +146,22 @@ export default function Deployer() {
             <Row><Col>
                 <Form.Group>
                     <FormLabel></FormLabel>
-                    <Button variant='warning' onClick={deploy}>Deploy Contract</Button>
+                    <Button variant='warning' onClick={deploy}>Start the Game</Button>
                 </Form.Group>
             </Col></Row>
             : ""
         }
-        {contractDeployed ? 
+        {contractDeployed && playable ? 
         <fieldset disabled={ !playable }>
-        <Row><Col>
+        <Row className='mb-3'><Col>
             <Form.Group>
-                <FormLabel>Hand</FormLabel>
+                <FormLabel>Play Hand</FormLabel>
                 <input className='form-control' type='text' value={hand} onChange={(e) => setHand(e.target.value)}/>
             </Form.Group>
         </Col></Row>
-        <Row><Col>
+        <Row className='mb-3'><Col>
             <Form.Group>
-                <FormLabel>Guess</FormLabel>
+                <FormLabel>Guess the number</FormLabel>
                 <input className='form-control' type='text' value={guess} onChange={(e) => setGuess(e.target.value)}/>
             </Form.Group>
         </Col></Row>

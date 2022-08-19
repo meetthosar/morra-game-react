@@ -95,14 +95,14 @@ export default function Attacher() {
   return (
     <Form>
         <p>{message}</p>
-        <fieldset disabled={ acceptedWager }>
-        <Row><Col>
+        <fieldset disabled={ acceptedWager || showAccept }>
+        <Row className="mb-3"><Col>
             <Form.Group>
                 <FormLabel>Contract Info</FormLabel>
                 <input className='form-control' type='text' value={contractInfo} onChange={(e) => setContractInfo(e.target.value)}/>
             </Form.Group>
         </Col></Row>
-        <Row><Col>
+        <Row  className="mb-3"><Col>
             <Form.Group>
                 <FormLabel></FormLabel>
                 <Button variant='success' onClick={attach}>Submit</Button>
@@ -113,26 +113,26 @@ export default function Attacher() {
         { showAccept ?
         <fieldset>
       
-        <Row><Col>
+        <Row className="mb-3 text-center"><Col>
             <Form.Group>
                 <FormLabel></FormLabel>
-                <Button variant='warning' onClick={() => accept()}>Accept Wager</Button>
+                <Button variant='warning' onClick={() => accept()}>Accept terms and Pay Wager</Button>
             </Form.Group>
         </Col></Row>
         </fieldset>
         : ""}
 
         {acceptedWager && playable ? 
-          <fieldset disabled={played}>
+          <fieldset disabled={!playable}>
             <Row><Col>
                 <Form.Group>
-                    <FormLabel>Hand</FormLabel>
+                    <FormLabel>Play Hand</FormLabel>
                     <input className='form-control' type='text' value={hand} onChange={(e) => setHand(e.target.value)}/>
                 </Form.Group>
             </Col></Row>
-            <Row><Col>
+            <Row className="mb-3"><Col>
                 <Form.Group>
-                    <FormLabel>Guess</FormLabel>
+                    <FormLabel>Guess the number</FormLabel>
                     <input className='form-control' type='text' value={guess} onChange={(e) => setGuess(e.target.value)}/>
                 </Form.Group>
             </Col></Row>
