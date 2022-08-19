@@ -7,8 +7,9 @@ reach.setWalletFallback(reach.walletFallback({
   providerEnv: 'TestNet', MyAlgoConnect }));
 
 export default class Common {
-    reach = reach
-    backend = backend
+    reach = reach;
+    backend = backend;
+    winner = ["Draw","Player1", "Player2"];
     getAccount = async () => {
         return reach.getDefaultAccount();
     }
@@ -28,5 +29,6 @@ export default class Common {
         const account = await this.getAccount();
         return await account.contract(backend, JSON.parse(contractInfo));
     }
+
 };
 

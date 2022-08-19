@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Col, Form, FormLabel, Row } from 'react-bootstrap'
 import Common from '../Common/common';
 
 const common = new Common();
 const deadline = {ETH: 10, ALGO: 100, CFX: 1000}[common.reach.connector];
-const wager = common.reach.parseCurrency(0.01);
+const wager = common.reach.parseCurrency(1);
 /* import { loadStdlib } from '@reach-sh/stdlib';
 import * as backend from '../build/index.main.mjs';
 
@@ -23,6 +23,7 @@ export default function Deployer() {
     const [playable, setPlayable] = useState(true);
     const [played, setPlayed] = useState(false);
     const [contractDeployed, setContractDeployed] = useState(false);
+    const [resolvePlayandGuess, setResolvePlayandGuess] = useState(null);
 
     const deploy = async () => {
 
@@ -107,37 +108,34 @@ export default function Deployer() {
     const startGame = () => {
         setMessage("Let's start the game");
     }
+    
     const playHandAndGuess = async () => {
         console.log('Deployer : In Play');
-        console.log(`contractDeployed ${contractDeployed}`);
-
         setPlayable(true);
         setHand(null);
         setGuess(null);
-        const playAgain = await new Promise((playguess, waiting) => {
-            if(played)
-                playguess();
-            else waiting();
+        const playAgain = await new Promise(playguess => {
+            setResolvePlayandGuess({playguess : playguess});
         });
-
-        playAgain.then(
-            () => {
-                setPlayed(false);
-            },
-            () => setMessage('Waiting... '));
-
-        return Object({hand:hand, guess:guess});
+        
+        return Object(playAgain);
     }
 
-    const isPlayed = () => setPlayed(true);
+    const isPlayed = () => { resolvePlayandGuess.playguess({hand:hand, guess:guess}); setPlayed(true);}
 
-    const seeWinner = () => {
-        setMessage(`Player1 is the winner`);
+    const seeWinner = (outcome) => {
+        console.log(JSON.parse(outcome));
+        setContract(null);
+        setContractInfo(null);
+        setContractDeployed(false);
+        setMessage(`${common.winner[JSON.parse(outcome)]} is the winner`);
     }
 
     const informTimeout = () => {
         setMessage("Time up");
     }
+
+    useEffect(() => {setHand(hand); setGuess(guess)}, [hand, guess]);
 
   return (
     <Form>
