@@ -16,16 +16,13 @@ export default class Common {
         const balAtomic = await reach.balanceOf(account);       
         return reach.formatCurrency(balAtomic, 4);
     }
-    getContract = async (account) => {
-        return await account.contract(this.backend);
-    }
-    getContractInfo = async() => {
+    getContract = async () => {
         const account = await this.getAccount();
-        const contract = await this.getContract(account);
-        
+        return  account.contract(this.backend);
+    }
+    getContractInfo = async(contract) => {
         const contractInfo = JSON.stringify( await contract.getInfo(), null, 2);
-        
-        return {contractInfo, contract};
+        return contractInfo;
     }
     attachToContract = async(contractInfo) => {
         const account = await this.getAccount();

@@ -9,14 +9,14 @@ import { ThemeProvider } from 'react-bootstrap';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ErrorBoundary>
+    {/* <ErrorBoundary> */}
     <ThemeProvider
       breakpoints={['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']}
       minBreakpoint="xl"
     >
         <App />
       </ThemeProvider>
-    </ErrorBoundary>
+    {/* </ErrorBoundary> */}
   </React.StrictMode>
 );
 
