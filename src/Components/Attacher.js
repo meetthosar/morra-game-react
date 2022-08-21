@@ -12,10 +12,11 @@ export default function Attacher() {
     const [message, setMessage] = useState(null);
     const [acceptedWager, setAcceptedWager] = useState(false);
     const [showAccept, setShowAccept] = useState(false)
-    const [playable, setPlayable] = useState(true);
+    const [playable, setPlayable] = useState(false);
     const [played, setPlayed] = useState(false);
     const [resolveAccept, setResolveAccept] = useState(null);
     const [resolvePlayandGuess, setResolvePlayandGuess] = useState(null);
+    const [finish, setFinish] = useState(false);
 
     const attach = () => {
         const promiseToAttach = new Promise( async(attachContract, throwError) => {
@@ -46,46 +47,58 @@ export default function Attacher() {
         
     }
 
-    useEffect(() => {setHand(hand); setGuess(guess)}, [hand, guess]);
+    useEffect(() => {setHand(hand); setGuess(guess); if(finish) setContractInfo(null); }, [hand, guess,contractInfo]);
 
     const acceptWager = async () => {
     
       console.log('Attacher - Accept wager');
         setShowAccept(true);
+        setMessage("Waiting to accept the wager");
         const acceptWagerPromise = await new Promise(acceptWage => {
           console.log('Inside promise');
-          setPlayable(true);
+          // setPlayable(true);
           setResolveAccept({acceptWage:acceptWage});
         });
-
-        setMessage("Waiting to accept the wager");
+        setMessage('Waiting for Player1 to play')
+        
     }
 
 
     const playHandAndGuess = async () => {
       console.log('Attacher : In Play');
+      setMessage('Playing...')
       setPlayable(true);
       setHand(null);
       setGuess(null);
       const playAgain = await new Promise(playguess => {
           setResolvePlayandGuess({playguess : playguess});
+          setMessage('Waiting for Player1 to play')
       });
       // console.log(playAgain);
       return Object(playAgain);
   }
 
-  const isPlayed = () => { resolvePlayandGuess.playguess({hand:hand, guess:guess}); setPlayed(true);}
+  const isPlayed = () => { resolvePlayandGuess.playguess({hand:hand, guess:guess}); setPlayed(true);setPlayable(false);}
 
   const accept = () => { resolveAccept.acceptWage();  setAcceptedWager(true);setShowAccept(false);
-    setPlayable(true);}
+    setMessage('Waiting for Player1 to play')}
 
   const seeWinner = (outcome) => {
     console.log(JSON.parse(outcome));
-      setContractInfo(null);
-      setAcceptedWager(true);
+      setFinish(true);
+      setAcceptedWager(false);
       setShowAccept(false);
       setPlayable(false);
+      setContractInfo(null);
+      console.log(contractInfo);
       setMessage(`${common.winner[outcome]} is the winner`);
+  }
+
+  const reset = () => {
+    setAcceptedWager(false);
+    setShowAccept(false);
+    setPlayable(false);
+    setContractInfo(null);
   }
 
   const informTimeout = () => {
@@ -95,6 +108,7 @@ export default function Attacher() {
   return (
     <Form>
         <p>{message}</p>
+        {!finish ?
         <fieldset disabled={ acceptedWager || showAccept }>
         <Row className="mb-3"><Col>
             <Form.Group>
@@ -109,7 +123,14 @@ export default function Attacher() {
             </Form.Group>
         </Col></Row>
         </fieldset>
-
+        :
+        <Row  className="mb-3"><Col>
+            <Form.Group>
+                <FormLabel></FormLabel>
+                <Button variant='info' onClick={() => {setFinish(false); setMessage(null)}}>Play Again</Button>
+            </Form.Group>
+        </Col></Row>
+        }
         { showAccept ?
         <fieldset>
       
@@ -123,7 +144,7 @@ export default function Attacher() {
         : ""}
 
         {acceptedWager && playable ? 
-          <fieldset disabled={!playable}>
+          <fieldset>
             <Row><Col>
                 <Form.Group>
                     <FormLabel>Play Hand</FormLabel>
