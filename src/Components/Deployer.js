@@ -17,8 +17,8 @@ export default function Deployer() {
     const [contractInfo, setContractInfo] = useState(null);
     const [contract, setContract] = useState(null)
     const [account, setAccount] = useState(null);
-    const [hand, setHand] = useState(0);
-    const [guess, setGuess] = useState(0);
+    const [hand, setHand] = useState(null);
+    const [guess, setGuess] = useState(null);
     const [message, setMessage] = useState();
     const [playable, setPlayable] = useState(true);
     const [played, setPlayed] = useState(false);
@@ -27,47 +27,7 @@ export default function Deployer() {
 
     const deploy = async () => {
 
-        /* let promiseToCreateContract = new Promise( async (createContract, throwError) => {
-            if(account === null){      
-                var acc = await setupAccount();
-                await setAccount(acc)
-            }
-
-            if(acc !== null)
-                createContract(acc);
-            else
-                throwError();
-        });
-
-        promiseToCreateContract.then(
-            async (account) => {
-                const contr = await account.contract(backend);
-                const interaction = {...reach.hasRandom, 
-                    playHandAndGuess:playHandAndGuess, 
-                    seeWinner : seeWinner, startGame:startGame,  
-                    wager:10, deadline:10};
-                
-                setAccount(account);
-                setContract(contr);            
-                
-                backend.Player1(contr,Object(interaction));
-                
-                const contractInfo = JSON.stringify( await contr.getInfo(), null, 2);
-                setContractInfo(contractInfo);
-            },
-            () => { console.log("Failed to create account"); }
-        ); */
-
-        /* const {contractInfo, contract} = await common.getContractInfo();
-        console.log(contractInfo, contract);
-        setContractInfo(contractInfo);
-        const interaction = {...common.reach.hasRandom, 
-            playHandAndGuess:playHandAndGuess, 
-            seeWinner : seeWinner, startGame:startGame,  
-            wager:10, deadline:10};
-        common.backend.Player1(contract,Object(interaction)); */
-
-
+    
         const promiseToDeploy= new Promise( async(deployContract, throwError) => {
 
             const contract = await common.getContract();
@@ -140,7 +100,7 @@ export default function Deployer() {
   return (
     <Form>
         <p>{message}</p>
-        { contractInfo != null ? <p>Contract Info : {contractInfo}</p>: ""}
+        { contractInfo != null ? <div><p>Contract Info : {contractInfo}</p><p> Waiting for Attacher to join / Play...</p></div>: ""}
         
         {!contractDeployed ? 
             <Row><Col>
